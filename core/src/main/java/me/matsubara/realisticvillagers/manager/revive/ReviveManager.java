@@ -162,6 +162,8 @@ public class ReviveManager implements Listener {
                 && living instanceof InventoryHolder holder
                 && !PluginUtils.hasAnyOf(holder, plugin.getIsCrossKey())) return;
 
+        if (!Config.REVIVE_DROP_HEADS.asBool()) return;
+
         ItemStack head = createHeadItem(npc.get(), plugin.getConverter().getNPCTag(living, false));
 
         // Drop head at villager death location.
