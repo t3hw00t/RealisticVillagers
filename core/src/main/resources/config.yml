@@ -1530,6 +1530,8 @@ revive:
   only-at-night: true
   # If only villagers with a cross can be revived.
   only-with-cross: true
+  # Whether a head should be dropped when a villager dies and revival is enabled.
+  drop-heads: true
   # Chance of an emerald block breaking when struck by lightning.
   break-emerald-chance: 0.1
   head-item:

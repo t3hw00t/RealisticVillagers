@@ -193,6 +193,7 @@ public enum Config {
     REVIVE_ENABLED("revive.enabled"),
     REVIVE_ONLY_AT_NIGHT("revive.only-at-night"),
     REVIVE_ONLY_WITH_CROSS("revive.only-with-cross"),
+    REVIVE_DROP_HEADS("revive.drop-heads"),
     REVIVE_BREAK_EMERALD_CHANCE("revive.break-emerald-chance"),
     REVIVE_SPAWN_VALUES_HEALTH("revive.spawn-values.health"),
     REVIVE_SPAWN_VALUES_FOOD_LEVEL("revive.spawn-values.food-level"),
