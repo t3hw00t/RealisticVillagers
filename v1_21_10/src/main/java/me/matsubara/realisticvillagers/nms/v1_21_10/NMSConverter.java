@@ -73,7 +73,6 @@ import org.bukkit.craftbukkit.v1_21_R6.entity.CraftVillager;
 import org.bukkit.craftbukkit.v1_21_R6.persistence.CraftPersistentDataAdapterContext;
 import org.bukkit.craftbukkit.v1_21_R6.persistence.CraftPersistentDataContainer;
 import org.bukkit.craftbukkit.v1_21_R6.persistence.CraftPersistentDataTypeRegistry;
-import org.bukkit.entity.AbstractVillager;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.ZombieVillager;
 import org.bukkit.event.entity.CreatureSpawnEvent;
@@ -199,22 +198,25 @@ public class NMSConverter implements INMSConverter {
     @SuppressWarnings("ConstantConditions")
     @Override
     public String getNPCTag(org.bukkit.entity.LivingEntity entity, boolean isInfection) {
-        if (entity instanceof AbstractVillager villager) {
-            Optional<IVillagerNPC> optional = getNPC(villager);
-            if (optional.isEmpty()) return null;
-
-            VillagerNPC npc = (VillagerNPC) optional.get();
-            npc.setWasInfected(isInfection);
-
-            if (npc.getOffline() instanceof OfflineVillagerNPC offline) {
-                byte[] primitive = RealisticVillagers.VILLAGER_DATA.toPrimitive(
-                        offline.toOfflineDataWrapper(),
-                        villager.getPersistentDataContainer().getAdapterContext());
-                return Base64.getEncoder().encodeToString(primitive);
-            }
-        } else if (entity instanceof ZombieVillager) {
+        if (entity instanceof ZombieVillager) {
             PersistentDataContainer container = entity.getPersistentDataContainer();
             return container.getOrDefault(plugin.getZombieTransformKey(), PersistentDataType.STRING, "");
+        }
+
+        Optional<IVillagerNPC> optional = getNPC(entity);
+        if (optional.isEmpty()) return null;
+
+        IVillagerNPC npc = optional.get();
+        if (npc instanceof VillagerNPC villager) {
+            villager.setWasInfected(isInfection);
+        }
+
+        if (npc.getOffline() instanceof OfflineVillagerNPC offline) {
+            PersistentDataContainer container = entity.getPersistentDataContainer();
+            byte[] primitive = RealisticVillagers.VILLAGER_DATA.toPrimitive(
+                    offline.toOfflineDataWrapper(),
+                    container.getAdapterContext());
+            return Base64.getEncoder().encodeToString(primitive);
         }
         return null;
     }
