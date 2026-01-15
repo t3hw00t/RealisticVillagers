@@ -40,6 +40,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.ScoreboardManager;
 import org.bukkit.scoreboard.Team;
+import org.bukkit.inventory.EntityEquipment;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -232,6 +233,13 @@ public final class VillagerTracker implements Listener {
 
         if (transformed instanceof ZombieVillager zombie) {
             disableNametag(zombie);
+            plugin.getServer().getScheduler().runTask(plugin, () -> {
+                if (zombie.isDead()) return;
+                EntityEquipment equipment = zombie.getEquipment();
+                if (equipment != null) {
+                    equipment.clear();
+                }
+            });
         }
     }
 
@@ -414,10 +422,8 @@ public final class VillagerTracker implements Listener {
 
     private void disableNametag(@NotNull LivingEntity living) {
         if (!Config.DISABLE_NAMETAGS.asBool()) return;
-        String currentName = living.getCustomName();
-        living.setCustomName(HIDE_NAMETAG_NAME);
+        living.setCustomName(null);
         living.setCustomNameVisible(false);
-        checkNametagTeam(currentName);
     }
 
     private @NotNull Team getNametagTeam(@NotNull Scoreboard scoreboard) {
