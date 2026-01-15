@@ -229,6 +229,10 @@ public final class VillagerTracker implements Listener {
 
         // If a villager isn't custom, the tag will be null.
         transformations.put(transformed.getUniqueId(), plugin.getConverter().getNPCTag((LivingEntity) entity, isInfection));
+
+        if (transformed instanceof ZombieVillager zombie) {
+            disableNametag(zombie);
+        }
     }
 
     @EventHandler
@@ -406,6 +410,14 @@ public final class VillagerTracker implements Listener {
             if (defaultName == null) return;
             plugin.getLogger().warning("It wasn't possible to disable the nametag of the villager {" + defaultName + "}!");
         }
+    }
+
+    private void disableNametag(@NotNull LivingEntity living) {
+        if (!Config.DISABLE_NAMETAGS.asBool()) return;
+        String currentName = living.getCustomName();
+        living.setCustomName(HIDE_NAMETAG_NAME);
+        living.setCustomNameVisible(false);
+        checkNametagTeam(currentName);
     }
 
     private @NotNull Team getNametagTeam(@NotNull Scoreboard scoreboard) {
